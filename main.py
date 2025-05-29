@@ -19,7 +19,8 @@ RED = (255, 0, 0)
 BLUE = (0, 0, 255)
 
 # Lógica da palavra
-MAX_TENTATIVAS = 9
+MAX_TENTATIVAS = 6
+
 with open("palavras.txt", "r", encoding="utf-8") as arquivo:
     lista_palavras = arquivo.readlines()
 
@@ -119,15 +120,16 @@ def desenhar_tela():
         else:
             tela.fill((0, 0, 0)) # poderia ser uma imagem
 
-        tela.blit(resultado, ((LARGURA - resultado.get_width()) // 2, 250))
+        tela.blit(resultado, ((LARGURA - resultado.get_width()) // 2, 200))
+        # tela.blit(resultado, ((LARGURA - resultado.get_width()) // 2, (ALTURA - resultado.get_height()) // 2))
 
         replay = fonte.render("Pressione 'R' para jogar novamente! ", True, WHITE)
-        tela.blit(replay, ((LARGURA - replay.get_width()) // 2, 350))
+        tela.blit(replay, ((LARGURA - replay.get_width()) // 2, 310))
     
     pygame.display.flip()
 
 def reiniciar_jogo():
-    global palavra_aleatoria, letras_tentadas, letras_acertadas, letras_erradas, tentativas, fim_de_jogo, mensagem_final, curr_background
+    global palavra_aleatoria, letras_tentadas, letras_acertadas, letras_erradas, tentativas, fim_de_jogo, mensagem_final, curr_background, usou_dica
     palavra_aleatoria = random.choice(lista_palavras).lower().strip()
     letras_tentadas = []
     letras_acertadas = []
@@ -136,6 +138,7 @@ def reiniciar_jogo():
     fim_de_jogo = False
     mensagem_final = ""
     curr_background = random.choice(backgrounds)
+    usou_dica = False
 
 # Loop principal
 rodando = True
@@ -147,10 +150,10 @@ while rodando:
             rodando = False
             break
 
-        if evento.type == pygame.KEYDOWN and not fim_de_jogo:
+        if evento.type == pygame.KEYDOWN:
             letra = evento.unicode.lower() # INPUT DA LETRA
 
-            if fim_de_jogo and (letra == "R"): # não muda?
+            if fim_de_jogo and (letra == "r"): # não muda?
                 reiniciar_jogo()
                 continue
 
