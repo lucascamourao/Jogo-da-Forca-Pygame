@@ -147,7 +147,7 @@ while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
-            break
+            break # close the game screen
 
         if event.type == pygame.KEYDOWN:
             letter = event.unicode.lower() # letter 'input'
@@ -175,7 +175,7 @@ while running:
                             break
                 else:
                     continue  # já usou dica
-                
+
             elif letter.isalpha() and len(letter) == 1:
                 if letter in tried_letters:
                     #letra_ja_tentada = fonte.render("Essa letra já foi tentada. ", True, VERMELHO)
