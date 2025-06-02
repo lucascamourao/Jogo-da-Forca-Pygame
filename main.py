@@ -7,7 +7,7 @@ WIDTH, HEIGHT = 900, 600
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 SCREEN_SIZE = screen.get_size()
 pygame.display.set_caption("Jogo da Forca")
-font_main = pygame.font.SysFont("arial", 45) 
+main_font = pygame.font.SysFont("arial", 45) 
 font_small = pygame.font.SysFont("arial", 30) 
 font_big = pygame.font.SysFont("timesnewroman", 55)
 
@@ -29,7 +29,7 @@ correct_letters = []
 wrong_letters = []
 tries = 0
 usou_dica = False
-isGameOver = False
+is_game_over = False
 final_message = ""
 
 # Loading images
@@ -40,12 +40,12 @@ background_victory = pygame.image.load("imagens/background_victory.jpg")
 
 backgrounds = [background_img1, background_img2]
 
-curr_background = random.choice(backgrounds)
+current_background = random.choice(backgrounds)
 
-curr_font_color = BLACK
+current_font_color = BLACK
 
-if curr_background == background_img2:
-    curr_font_color = BLACK # mudar para outros fundos
+if current_background == background_img2:
+    current_font_color = BLACK # mudar para outros fundos
 
 # Função para desenhar a forca e o boneco na tela
 def desenhar_boneco(tentativas, curr_font_color):
@@ -75,14 +75,14 @@ def desenhar_boneco(tentativas, curr_font_color):
 
 # Draw elements in the screen
 def draw_screen():
-    imagem_fundo = pygame.transform.scale(curr_background, SCREEN_SIZE)
+    imagem_fundo = pygame.transform.scale(current_background, SCREEN_SIZE)
 
     screen.blit(imagem_fundo, (0, 0))
 
-    titulo_render = font_big.render("JOGO DA FORCA", True, curr_font_color)
+    titulo_render = font_big.render("JOGO DA FORCA", True, current_font_color)
     screen.blit(titulo_render, (30, 30))
 
-    texto_tentativas = font_small.render(f"TENTATIVAS: {tries}/{MAX_TRIES}", True, curr_font_color)
+    texto_tentativas = font_small.render(f"TENTATIVAS: {tries}/{MAX_TRIES}", True, current_font_color)
     screen.blit(texto_tentativas, (WIDTH - texto_tentativas.get_width() - 30, 30))
 
     palavra_exibida = ""
@@ -93,50 +93,46 @@ def draw_screen():
             palavra_exibida += letra + " "
             acertos += 1
         else:
-            palavra_exibida = palavra_exibida +"_ "
+            palavra_exibida += "_ "
 
-    texto_palavra = font_main.render(palavra_exibida, True, curr_font_color)
+    texto_palavra = main_font.render(palavra_exibida, True, current_font_color)
     screen.blit(texto_palavra, ((WIDTH - texto_palavra.get_width()) // 2, 150))
   
-    letras_usadas = font_main.render("Erradas: " + ", ".join(wrong_letters), True, curr_font_color)
+    letras_usadas = main_font.render("Erradas: " + ", ".join(wrong_letters), True, current_font_color)
     screen.blit(letras_usadas, ((WIDTH - letras_usadas.get_width()) // 2, 460))
 
-    desenhar_boneco(tries, curr_font_color)  
+    desenhar_boneco(tries, current_font_color)  
 
     if usou_dica:
-        dica_texto = font_main.render("Dica usada!", True, RED)
+        dica_texto = main_font.render("Dica usada!", True, RED)
         screen.blit(dica_texto, ((WIDTH - dica_texto.get_width()) // 2, 250))
 
-    if isGameOver:
+    if is_game_over:
         resultado = font_big.render(final_message, True, GREEN if "ganhou" in final_message else RED)
         
-        #tela.fill(BRANCO) # tela de fundo
-
         if "ganhou" in final_message:
             background_victory_renderized = pygame.transform.scale(background_victory, SCREEN_SIZE)
             screen.blit(background_victory_renderized, (0, 0))
-            #tela.fill((50, 30, 20)) # poderia ser uma imagem
         else:
             screen.fill((0, 0, 0)) # poderia ser uma imagem
 
         screen.blit(resultado, ((WIDTH - resultado.get_width()) // 2, 200))
-        # tela.blit(resultado, ((LARGURA - resultado.get_width()) // 2, (ALTURA - resultado.get_height()) // 2))
 
-        replay = font_main.render("Pressione 'R' para jogar novamente! ", True, WHITE)
+        replay = main_font.render("Pressione 'R' para jogar novamente! ", True, WHITE)
         screen.blit(replay, ((WIDTH - replay.get_width()) // 2, 310))
     
     pygame.display.flip()
 
 def reiniciar_jogo():
-    global random_word, tried_letters, correct_letters, wrong_letters, tries, isGameOver, final_message, curr_background, usou_dica
+    global random_word, tried_letters, correct_letters, wrong_letters, tries, is_game_over, final_message, current_background, usou_dica
     random_word = random.choice(words_list).lower().strip()
     tried_letters = []
     correct_letters = []
     wrong_letters = []
     tries = 0
-    isGameOver = False
+    is_game_over = False
     final_message = ""
-    curr_background = random.choice(backgrounds)
+    current_background = random.choice(backgrounds)
     usou_dica = False
 
 # Main loop
@@ -150,13 +146,13 @@ while running:
             break # close the game screen
 
         if event.type == pygame.KEYDOWN:
-            letter = event.unicode.lower() # letter 'input'
+            key = event.unicode.lower() # letter 'input'
 
-            if isGameOver and (letter == "r"):
+            if is_game_over and (key == "r"):
                 reiniciar_jogo()
                 continue
 
-            if letter == "1":
+            if key == "1":
                 if not usou_dica:
                     usou_dica = True
                     while True:
@@ -176,47 +172,47 @@ while running:
                 else:
                     continue  # já usou dica
 
-            elif letter.isalpha() and len(letter) == 1:
-                if letter in tried_letters:
+            elif key.isalpha() and len(key) == 1:
+                if key in tried_letters:
                     #letra_ja_tentada = fonte.render("Essa letra já foi tentada. ", True, VERMELHO)
                     #tela.blit(letra_ja_tentada, (30, 300))
                     continue                        
-                tried_letters.append(letter) 
+                tried_letters.append(key) 
 
-                if letter in random_word:
-                    if letter == "a":
+                if key in random_word:
+                    if key == "a":
                         if "ã" in random_word:
                             correct_letters.append("ã")
                         
                         if "á" in random_word:
                             correct_letters.append("á")
                             
-                    elif (letter == "e"):
+                    elif (key == "e"):
                         if "é" in random_word:
                             correct_letters.append("é")
 
-                    elif (letter == "i"):
+                    elif (key == "i"):
                         if "í" in random_word:
                             correct_letters.append("í")
                         if "ì" in random_word:
                             correct_letters.append("ì")
 
-                    elif (letter == "c"):
+                    elif (key == "c"):
                         if "ç" in random_word:
                             correct_letters.append("ç")
 
-                    correct_letters.append(letter)
+                    correct_letters.append(key)
                 else:
-                    wrong_letters.append(letter)
+                    wrong_letters.append(key)
                     tries += 1
 
             # Check if the game is over
             if tries >= MAX_TRIES:
                 final_message = "Você perdeu!"
-                isGameOver = True
+                is_game_over = True
                 
             elif all(letter in correct_letters for letter in random_word):
                 final_message = "Você ganhou o jogo!"
-                isGameOver = True
+                is_game_over = True
 
 pygame.quit()
