@@ -1,5 +1,7 @@
 import pygame
 import random
+import os
+import sys
 
 # Inicializations
 pygame.init()
@@ -20,7 +22,16 @@ BLUE = (0, 0, 255)
 
 MAX_TRIES = 6
 
-with open("palavras.txt", "r", encoding="utf-8") as file:
+
+def get_resource_path(relative_path):
+    """Retorna o caminho correto, mesmo quando empacotado no .exe"""
+    try:
+        base_path = sys._MEIPASS
+    except AttributeError:
+        base_path = os.path.abspath(".")
+    return os.path.join(base_path, relative_path)
+
+with open(get_resource_path("palavras.txt"), "r", encoding="utf-8") as file:
     words_list = file.readlines()
 
 random_word = random.choice(words_list).lower().strip()
@@ -33,10 +44,10 @@ is_game_over = False
 final_message = ""
 
 # Loading images
-background_img1 = pygame.image.load("imagens/ceu_fundo1.jpg")
-background_img2 = pygame.image.load("imagens/ceu_fundo2.jpg")
+background_img1 = pygame.image.load(get_resource_path("imagens/ceu_fundo1.jpg"))
+background_img2 = pygame.image.load(get_resource_path("imagens/ceu_fundo2.jpg"))
 
-background_victory = pygame.image.load("imagens/background_victory.jpg")
+background_victory = pygame.image.load(get_resource_path("imagens/background_victory.jpg"))
 
 backgrounds = [background_img1, background_img2]
 
